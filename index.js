@@ -11,11 +11,11 @@ const cors = require("cors");
 
 const app = express();
 const Person = require("./models/person");
-const { update } = require("./models/person");
 
 app.use(express.static("build"));
 app.use(express.json());
 app.use(cors());
+
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
@@ -45,15 +45,6 @@ app.post("/api/persons", (request, response, next) => {
     name: body.name,
     number: body.number,
   });
-
-  Person.find({ name: person.name })
-    .then((foundPerson) => {
-      if (foundPerson) {
-        let id = foundPerson[0]._id;
-        response.send(`/api/perons/${id}`, foundPerson[0]);
-      }
-    })
-    .catch((error) => next(error));
 
   person.save().then((savedPerson) => {
     response.json(savedPerson);
